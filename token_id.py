@@ -4,10 +4,14 @@ with open("the-verdict.txt", "r", encoding="utf-8") as f:
 
 preprocessed = re.split(r'([,.:;?_!"()\']|--|\s)', raw_text)
 preprocessed = [item.strip() for item in preprocessed if item.strip()]
-all_words = set(sorted(preprocessed))
-print(len(all_words))
+all_tokens = sorted(list(set(preprocessed)))
+all_tokens.extend(["<|endoftext|>", "<|unk|>"])
+vocab = {token:integer for integer,token in enumerate(all_tokens)}
 
-vocab = {token:idx for idx, token in enumerate(all_words)}
+print(len(vocab.items()))
+print(list(vocab.items())[-1])
+
+vocab = {token:idx for idx, token in enumerate(all_tokens)}
 '''
 for idx, token in enumerate(vocab.items()):
     print(token)
@@ -26,6 +30,11 @@ class SimpleTokenizerV1:
         preprocessed = [
             item.strip() for item in preprocessed if item.strip()
         ]
+
+        preprocessed = [
+            item if item in vocab else "<|unk|>" for item in preprocessed
+        ]
+
         ids = [self.str_to_int[s] for s in preprocessed]
         return ids
         
@@ -36,8 +45,17 @@ class SimpleTokenizerV1:
         return text
 
 tokenizer = SimpleTokenizerV1(vocab)
-text = text = "It's the last he painted, you know, Mrs. Gisburn said with pardonable pride."
+text = "It's the last he painted, you know, Mrs. Gisburn said with pardonable pride."
 ids = tokenizer.encode(text)
+res = tokenizer.decode(ids)
 print(ids)
+print(res)
+
+text1 = "Hello, do you like tea?"
+text2 = "In the sunlit terraces of the palace."
+text = " <|endoftext|> ".join((text1, text2))
+print(text)
+print(tokenizer.encode(text))
+print(tokenizer.decode(tokenizer.encode(text)))
     
 
