@@ -40,7 +40,7 @@ if __name__ == '__main__':
     print("Text 2:", target_probas_2)
 
     # Compute logarithm of all token probabilities
-    log_probas = torch.log(torch.cat((target_probas_1, target_probas_2)))
+    log_probas = torch.log(torch.cat(target_probas_1, target_probas_2))
     print(log_probas)
 
     # Calculate the average probability for each token
