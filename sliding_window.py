@@ -3,16 +3,14 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 
 class GPTDatasetV1(Dataset):
-    """使用滑动窗口从文本中创建输入/目标序列对。"""
     def __init__(self, txt, tokenizer, max_length, stride):
         self.input_ids = []
         self.target_ids = []
 
-        # 将整个文本编码为 token ID 序列
+        # Tokenize the entire text
         token_ids = tokenizer.encode(txt, allowed_special={"<|endoftext|>"})
-        assert len(token_ids) > max_length, "文本 token 数必须大于 max_length"
 
-        # 滑动窗口切分
+        # Use a sliding window to chunk the book into overlapping sequences of max_length
         for i in range(0, len(token_ids) - max_length, stride):
             input_chunk = token_ids[i:i + max_length]
             target_chunk = token_ids[i + 1: i + max_length + 1]
@@ -26,21 +24,22 @@ class GPTDatasetV1(Dataset):
         return self.input_ids[idx], self.target_ids[idx]
 
 
+
 # ------------------------------------------------------------
 # DataLoader 创建函数
 # ------------------------------------------------------------
-def create_dataloader_v1(txt, batch_size=4, max_length=256, stride=128,
-                         shuffle=True, drop_last=True, num_workers=0):
-    """根据给定文本创建 DataLoader，返回批次数据。"""
+def create_dataloader_v1(txt, batch_size=4, max_length=256,
+                         stride=128, shuffle=True, drop_last=True, num_workers=0):
+    # Initialize the tokenizer
     tokenizer = tiktoken.get_encoding("gpt2")
+
+    # Create dataset
     dataset = GPTDatasetV1(txt, tokenizer, max_length, stride)
+
+    # Create dataloader
     dataloader = DataLoader(
-        dataset,
-        batch_size=batch_size,
-        shuffle=shuffle,
-        drop_last=drop_last,
-        num_workers=num_workers
-    )
+        dataset, batch_size=batch_size, shuffle=shuffle, drop_last=drop_last, num_workers=num_workers)
+
     return dataloader
 
 
