@@ -8,6 +8,7 @@ from sliding_window import create_dataloader_v1
 from training_validation_set_losses import calc_loss_batch, calc_loss_loader
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
+from pathlib import Path
 
 def train_model_simple(model, train_loader, val_loader, optimizer, device, num_epochs,
                        eval_freq, eval_iter, start_context, tokenizer):
@@ -148,6 +149,11 @@ if __name__ == '__main__':
         num_epochs=num_epochs, eval_freq=5, eval_iter=5,
         start_context="Every effort moves you", tokenizer=tokenizer
     )
+
+    save_path = Path("models/model_after_10_epochs.pth")
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    torch.save(model.state_dict(), save_path)
+    print("Model saved.")
 
     epochs_tensor = torch.linspace(0, num_epochs, len(train_losses))
     plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
