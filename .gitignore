@@ -1,3 +1,6 @@
 __pycache__/
 *.png
 *.pth
+*.csv
+*.tsv
+readme
