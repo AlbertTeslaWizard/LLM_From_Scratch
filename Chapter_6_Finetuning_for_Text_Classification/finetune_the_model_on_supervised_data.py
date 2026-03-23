@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 import time
 from calculate_the_classification_loss_and_accuracy import calc_loss_batch, calc_loss_loader, calc_accuracy_loader
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 def train_classifier_simple(model, train_loader, val_loader, optimizer, device, num_epochs,
                             eval_freq, eval_iter):
@@ -205,3 +206,7 @@ if __name__ == '__main__':
     print(f"Training accuracy: {train_accuracy*100:.2f}%")
     print(f"Validation accuracy: {val_accuracy*100:.2f}%")
     print(f"Test accuracy: {test_accuracy*100:.2f}%")
+
+    save_path = Path("../models/model_after_finetune.pth")
+    torch.save(model.state_dict(), save_path)
+    print("Model saved.")
