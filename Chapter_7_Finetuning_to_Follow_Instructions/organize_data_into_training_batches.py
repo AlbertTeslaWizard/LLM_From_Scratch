@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import Dataset
 import tiktoken
+from prepare_dataset import format_input
 
 
 class InstructionDataset(Dataset):

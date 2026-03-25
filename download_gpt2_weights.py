@@ -7,7 +7,7 @@ import urllib.request
 # "gpt2-large-774M.pth"
 # "gpt2-xl-1558M.pth"
 
-file_name = "gpt2-small-124M.pth"
+file_name = "gpt2-medium-355M.pth"
 
 url = f"https://huggingface.co/rasbt/gpt2-from-scratch-pytorch/resolve/main/{file_name}"
 
